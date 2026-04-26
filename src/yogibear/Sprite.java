@@ -45,15 +45,22 @@ public class Sprite {
         g.drawImage(image, 
                 x, y, x + width, y + height, // cél
                 srcX, srcY, srcX + frameWidth, srcY + frameHeight, // forrás
-                null);
-                
+                null);            
+    }
+    
+    public void update(boolean moving) {
+        if (!animated || !moving) {
+            currentFrame = 0;
+            frameCounter = 0;
+            return;
+        }
+        
         frameCounter++;
         if (frameCounter >= frameDelay) {
             frameCounter = 0;
             currentFrame = (currentFrame + 1) % framesPerRow;
         }
-
-    }
+    } 
     
     /**
      * Ellenőrzi, hogy a sprite ütközik-e egy másik sprite-al

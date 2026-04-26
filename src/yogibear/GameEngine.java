@@ -362,6 +362,7 @@ public class GameEngine extends JPanel {
                 int oldX = yogi.getX();
                 int oldY = yogi.getY();
                 yogi.move(getWidth(), getHeight());
+                yogi.update(yogi.isMoving());
                 
                 // Ütközés akadályokkal
                 if (currentLevel.checkCollisionWithObstacles(yogi, yogi.getX(), yogi.getY())) {

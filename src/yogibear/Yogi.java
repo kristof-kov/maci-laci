@@ -81,6 +81,10 @@ public class Yogi extends Sprite {
         }
     }
     
+    public boolean isMoving() {
+        return movingUp || movingDown || movingLeft || movingRight;
+    }
+    
     /**
      * Visszaállítja a pozícióját a kezdő pozícióra.
      */
