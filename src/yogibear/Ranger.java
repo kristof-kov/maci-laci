@@ -9,6 +9,9 @@ import java.util.ArrayList;
  */
 public class Ranger extends Sprite {
     
+    public static final int DEFAULT_SPEED = 2;
+    public static final int DEFAULT_DETECTION_RANGE = 80;
+    
     private final int detectionRange;
     private final int speed;
     private boolean movingForward;

@@ -9,6 +9,8 @@ import java.awt.Image;
 public class Yogi extends Sprite {
     
     private final int MOVEMENT_SPEED = 3;
+    private final int STARTING_LIVES = 3;
+    
     private int lives;
     private int basketsCollected;
     private final int startX;

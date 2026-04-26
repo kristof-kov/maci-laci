@@ -21,9 +21,9 @@ import java.awt.Graphics2D;
  */
 public class GameEngine extends JPanel {
     
-    private final int FPS = 60;
-    private final int YOGI_SIZE = 32;
-    private final int MAX_LEVELS = 10;
+    private static final int FPS = 60;
+    private static final int YOGI_SIZE = 32;
+    private static final int MAX_LEVELS = 10;
     
     private final Image background;
     private Level currentLevel;
