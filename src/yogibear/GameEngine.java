@@ -407,4 +407,8 @@ public class GameEngine extends JPanel {
     public void showLeaderboard() {
         scoreManager.showLeaderboard(this);
     }
+    
+    public void closeResources() {
+        scoreManager.close();
+    }
 }

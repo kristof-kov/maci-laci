@@ -17,7 +17,14 @@ public class YogiBearGUI {
 
     public YogiBearGUI() {
         frame = new JFrame("Maci Laci - Yogi Bear");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                gameArea.closeResources();
+                System.exit(0);
+            }
+        });
         frame.setLayout(new BorderLayout());
         
         // Menüsáv
