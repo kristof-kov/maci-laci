@@ -162,7 +162,7 @@ public class GameEngine extends JPanel {
     private void loadLevel(int levelNum) {
         try {
             currentLevel = new Level(levelNum);
-            Image yogiImage = new ImageIcon("data/images/yogi.png").getImage();
+            Image yogiImage = ImageCache.getImage("data/images/yogi_sheet.png");
             
             if (yogi == null) {
                 // Első pálya

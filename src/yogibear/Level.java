@@ -16,7 +16,7 @@ import javax.swing.ImageIcon;
 public class Level {
     
     // egy mező legyen 40x40
-    private final int TILE_SIZE = 40;
+    private static final int TILE_SIZE = 40;
     
     private ArrayList<Obstacle> obstacles;
     private ArrayList<Basket> baskets;
@@ -84,7 +84,7 @@ public class Level {
                             // Függőleges vadőr
                             Image vRangerImg = ImageCache.getImage("data/images/ranger.png");
                             rangers.add(new Ranger(posX, posY, TILE_SIZE, TILE_SIZE, vRangerImg,
-                                    Ranger.PatrolDirection.VERTICAL, 2, 80));
+                                    Ranger.PatrolDirection.VERTICAL, Ranger.DEFAULT_SPEED, Ranger.DEFAULT_DETECTION_RANGE));
                         }
                     }
                 }
