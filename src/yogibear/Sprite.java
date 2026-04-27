@@ -21,7 +21,7 @@ public class Sprite {
     protected int frameHeight;
     protected int framesPerRow;
     protected int currentFrame = 0;
-    protected int currentRow = 0;
+    protected int currentAnimationRow = 0;
     private int frameCounter = 0;
     private int frameDelay = 8; // minden 8 tickben vált frame-t
 
@@ -40,7 +40,7 @@ public class Sprite {
         }
         
         int srcX = currentFrame * frameWidth;
-        int srcY = currentRow * frameHeight;
+        int srcY = currentAnimationRow * frameHeight;
         
         g.drawImage(image, 
                 x, y, x + width, y + height, // cél

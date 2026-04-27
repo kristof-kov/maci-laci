@@ -54,22 +54,22 @@ public class Yogi extends Sprite {
         if (movingUp) {
             newY -= MOVEMENT_SPEED;
             direction = Direction.UP;
-            currentRow = 3;
+            currentAnimationRow = 3;
         }
         if (movingDown) {
             newY += MOVEMENT_SPEED;
             direction = Direction.DOWN;
-            currentRow = 0;
+            currentAnimationRow = 0;
         }
         if (movingLeft) {
             newX -= MOVEMENT_SPEED;
             direction = Direction.LEFT;
-            currentRow = 1;
+            currentAnimationRow = 1;
         }
         if (movingRight) {
             newX += MOVEMENT_SPEED;
             direction = Direction.RIGHT;
-            currentRow = 2;
+            currentAnimationRow = 2;
         }
         
         // Határ ellenőrzés

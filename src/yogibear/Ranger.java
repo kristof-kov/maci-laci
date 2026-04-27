@@ -33,6 +33,12 @@ public class Ranger extends Sprite {
         this.speed = speed;
         this.detectionRange = detectionRange;
         this.movingForward = true;
+        
+        this.animated = true;
+        this.frameWidth = 32;
+        this.frameHeight = 32;
+        this.framesPerRow = 6;
+                
     }
     
     /**
@@ -47,8 +53,10 @@ public class Ranger extends Sprite {
         
         if (direction == PatrolDirection.HORIZONTAL) {
             nextX += (movingForward ? speed : -speed);
+            currentAnimationRow = movingForward ? 2 : 1;
         } else  {
             nextY += (movingForward ? speed : -speed);
+            currentAnimationRow = movingForward ? 0 : 3;
         }
         
         // ha akadály, forduljon meg

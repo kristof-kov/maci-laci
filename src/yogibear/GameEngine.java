@@ -379,6 +379,7 @@ public class GameEngine extends JPanel {
                 // Vadőrök járőrözése és detektálás
                 for (Ranger ranger : currentLevel.getRangers()) {
                     ranger.patrol(currentLevel.getObstacles());
+                    ranger.update(true);
                     
                     if (!invincible && ranger.detectsYogi(yogi)) {
                         yogi.loseLife();
