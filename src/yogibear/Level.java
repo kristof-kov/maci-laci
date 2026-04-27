@@ -16,7 +16,7 @@ import javax.swing.ImageIcon;
 public class Level {
     
     // egy mező legyen 40x40
-    private final int TILE_SIZE = 40;
+    private static final int TILE_SIZE = 40;
     
     private ArrayList<Obstacle> obstacles;
     private ArrayList<Basket> baskets;
@@ -76,15 +76,15 @@ public class Level {
                         }
                         case 'H' -> {
                             // Vízszintes vadőr
-                            Image rangerImg = ImageCache.getImage("data/images/ranger.png");
-                            rangers.add(new Ranger(posX, posY, TILE_SIZE, TILE_SIZE, rangerImg,
-                                    Ranger.PatrolDirection.HORIZONTAL, 2, 80));
+                            Image hRangerImg = ImageCache.getImage("data/images/ranger_sheet.png");
+                            rangers.add(new Ranger(posX, posY, TILE_SIZE, TILE_SIZE, hRangerImg,
+                                    Ranger.PatrolDirection.HORIZONTAL, Ranger.DEFAULT_SPEED, Ranger.DEFAULT_DETECTION_RANGE));
                         }
                         case 'V' -> {
                             // Függőleges vadőr
-                            Image vRangerImg = ImageCache.getImage("data/images/ranger.png");
+                            Image vRangerImg = ImageCache.getImage("data/images/ranger_sheet.png");
                             rangers.add(new Ranger(posX, posY, TILE_SIZE, TILE_SIZE, vRangerImg,
-                                    Ranger.PatrolDirection.VERTICAL, 2, 80));
+                                    Ranger.PatrolDirection.VERTICAL, Ranger.DEFAULT_SPEED, Ranger.DEFAULT_DETECTION_RANGE));
                         }
                     }
                 }

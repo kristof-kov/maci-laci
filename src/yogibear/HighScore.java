@@ -7,6 +7,7 @@ import java.sql.Timestamp;
  * @author kovi
  */
 public class HighScore {
+    
     private final String playerName;
     private final int basketsCollected;
     private final long timeElapsed;

@@ -162,7 +162,7 @@ public class GameEngine extends JPanel {
     private void loadLevel(int levelNum) {
         try {
             currentLevel = new Level(levelNum);
-            Image yogiImage = new ImageIcon("data/images/yogi.png").getImage();
+            Image yogiImage = ImageCache.getImage("data/images/yogi_sheet.png");
             
             if (yogi == null) {
                 // Első pálya
@@ -362,6 +362,7 @@ public class GameEngine extends JPanel {
                 int oldX = yogi.getX();
                 int oldY = yogi.getY();
                 yogi.move(getWidth(), getHeight());
+                yogi.update(yogi.isMoving());
                 
                 // Ütközés akadályokkal
                 if (currentLevel.checkCollisionWithObstacles(yogi, yogi.getX(), yogi.getY())) {
@@ -378,6 +379,7 @@ public class GameEngine extends JPanel {
                 // Vadőrök járőrözése és detektálás
                 for (Ranger ranger : currentLevel.getRangers()) {
                     ranger.patrol(currentLevel.getObstacles());
+                    ranger.update(true);
                     
                     if (!invincible && ranger.detectsYogi(yogi)) {
                         yogi.loseLife();

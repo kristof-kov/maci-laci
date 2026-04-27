@@ -9,12 +9,21 @@ import java.awt.Rectangle;
  * @author kovi
  */
 public class Sprite {
-    // ezek a sprite jobb felső koordinátái
+    // ezek a sprite bal felső koordinátái
     protected int x;
     protected int y;
     protected int width;
     protected int height;
     protected Image image;
+    
+    protected boolean animated = false;
+    protected int frameWidth;
+    protected int frameHeight;
+    protected int framesPerRow;
+    protected int currentFrame = 0;
+    protected int currentAnimationRow = 0;
+    protected int frameCounter = 0;
+    private int frameDelay = 8; // minden 8 tickben vált frame-t
 
     public Sprite(int x, int y, int width, int height, Image image) {
         this.x = x;
@@ -25,8 +34,33 @@ public class Sprite {
     }    
     
     public void draw(Graphics g) {
-        g.drawImage(image, x, y, width, height, null);
+        if (!animated) {
+            g.drawImage(image, x, y, width, height, null);
+            return;
+        }
+        
+        int srcX = currentFrame * frameWidth;
+        int srcY = currentAnimationRow * frameHeight;
+        
+        g.drawImage(image, 
+                x, y, x + width, y + height, // cél
+                srcX, srcY, srcX + frameWidth, srcY + frameHeight, // forrás
+                null);            
     }
+    
+    public void update(boolean moving) {
+        if (!animated || !moving) {
+            currentFrame = 0;
+            frameCounter = 0;
+            return;
+        }
+        
+        frameCounter++;
+        if (frameCounter >= frameDelay) {
+            frameCounter = 0;
+            currentFrame = (currentFrame + 1) % framesPerRow;
+        }
+    } 
     
     /**
      * Ellenőrzi, hogy a sprite ütközik-e egy másik sprite-al

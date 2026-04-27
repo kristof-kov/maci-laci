@@ -8,8 +8,14 @@ import java.awt.Image;
  */
 public class Yogi extends Sprite {
     
-    private final int MOVEMENT_SPEED = 3;
-    private final int STARTING_LIVES = 3;
+    public enum Direction {
+        DOWN, LEFT, RIGHT, UP
+    }
+    
+    private Direction direction = Direction.DOWN;
+    
+    private static final int MOVEMENT_SPEED = 3;
+    private static final int STARTING_LIVES = 3;
     
     private int lives;
     private int basketsCollected;
@@ -25,8 +31,13 @@ public class Yogi extends Sprite {
         super(x, y, width, height, image);
         this.startX = x;
         this.startY = y;
-        this.lives = 3;
+        this.lives = STARTING_LIVES;
         this.basketsCollected = 0;
+        
+        this.animated = true;
+        this.frameWidth = 32;
+        this.frameHeight = 32;
+        this.framesPerRow = 3;
     }
     
     /**
@@ -42,15 +53,23 @@ public class Yogi extends Sprite {
         
         if (movingUp) {
             newY -= MOVEMENT_SPEED;
+            direction = Direction.UP;
+            currentAnimationRow = 3;
         }
         if (movingDown) {
             newY += MOVEMENT_SPEED;
+            direction = Direction.DOWN;
+            currentAnimationRow = 0;
         }
         if (movingLeft) {
             newX -= MOVEMENT_SPEED;
+            direction = Direction.LEFT;
+            currentAnimationRow = 1;
         }
         if (movingRight) {
             newX += MOVEMENT_SPEED;
+            direction = Direction.RIGHT;
+            currentAnimationRow = 2;
         }
         
         // Határ ellenőrzés
@@ -60,6 +79,20 @@ public class Yogi extends Sprite {
         if (newY >= 0 && newY + height <= worldHeight) {
             y = newY;
         }
+    }
+    
+    @Override
+    public void update(boolean moving) {
+        if (!moving) {
+            currentFrame = 1;
+            frameCounter = 0;
+            return;
+        }
+        super.update(moving);
+    }
+    
+    public boolean isMoving() {
+        return movingUp || movingDown || movingLeft || movingRight;
     }
     
     /**
