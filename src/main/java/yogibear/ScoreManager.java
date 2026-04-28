@@ -133,13 +133,13 @@ public class ScoreManager {
         
         if (topScores.isEmpty()) {
             JOptionPane.showMessageDialog(parent,
-                "Még nincs eredmény az adatbázisban.",
-                "Ranglista üres",
+                "No scores in the database yet.",
+                "Leaderboard Empty",
                 JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         
-        String[] columnNames = {"Helyezés", "Név", "Kosarak", "Idő", "Dátum"};
+        String[] columnNames = {"Rank", "Name", "Baskets", "Time", "Date"};
         Object[][] data = new Object[topScores.size()][5];
         
         for (int i = 0; i < topScores.size(); i++) {
@@ -170,7 +170,7 @@ public class ScoreManager {
         scrollPane.setPreferredSize(new java.awt.Dimension(550, 300));
         
         JOptionPane.showMessageDialog(parent, scrollPane, 
-                "Top 10 Eredmény", JOptionPane.PLAIN_MESSAGE);
+                "Top 10 Scores", JOptionPane.PLAIN_MESSAGE);
     }
     
     /**
