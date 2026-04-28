@@ -27,7 +27,7 @@ public class YogiBearGUI {
         });
         frame.setLayout(new BorderLayout());
         
-        // Menüsáv
+        // menu bar
         JMenuBar menuBar = new JMenuBar();
         
         JMenu gameMenu = new JMenu("Game");
@@ -56,7 +56,7 @@ public class YogiBearGUI {
         
         frame.setJMenuBar(menuBar);
         
-        // Játékterület
+        // game area
         gameArea = new GameEngine();
         frame.add(gameArea, BorderLayout.CENTER);
         
