@@ -1,12 +1,15 @@
-# NetBeans
-build/
-dist/
-nbproject/private/
-
 # IntelliJ
 out/
 .idea/
 *.iml
+
+# Maven
+target/
+dependency-reduced-pom.xml
+
+# NetBeans
+nbproject/
+build.xml
 
 # Database (Apache Derby)
 *.lck
