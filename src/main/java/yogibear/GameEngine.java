@@ -1,11 +1,9 @@
 package yogibear;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -13,7 +11,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.Timer;
-import java.awt.Graphics2D;
 
 /**
  *
@@ -32,17 +29,23 @@ public class GameEngine extends JPanel {
     private boolean paused = false;
     private boolean gameOver = false;
     
-    // Timer
+    // timer
     private long gameStartTime;
     private long elapsedTime;
     
-    // Invincibility
+    // invincibility
     private boolean invincible = false;
     private long invincibilityStart;
     private final long INVINCIBILITY_DURATION = 2000; // 2 másodperc
     
-    // Score
+    // score
     private final ScoreManager scoreManager;
+
+    // assets
+    private Font pixelFont;
+    private final Image heartIcon;
+    private final Image basketIcon;
+    private final Image clockIcon;
 
     public GameEngine() {
         super();
@@ -55,6 +58,19 @@ public class GameEngine extends JPanel {
         
         gameTimer = new Timer(1000 / FPS, new GameLoopListener());
         gameTimer.start();
+
+        try {
+            pixelFont = Font.createFont(Font.TRUETYPE_FONT,
+                    new File("data/fonts/PressStart2P-Regular.ttf")).deriveFont(10f);
+            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(pixelFont);
+        } catch (Exception e) {
+            pixelFont = new Font("Arial", Font.BOLD, 10);
+            System.err.println("Font not found, using Arial instead");
+        }
+
+        heartIcon = ImageCache.getImage("data/images/heart.png");
+        basketIcon = ImageCache.getImage("data/images/basket.png");
+        clockIcon = ImageCache.getImage("data/images/clock.png");
         
         SoundManager.load("pickup", "data/sounds/pickup.wav");
         SoundManager.load("caught", "data/sounds/caught.wav");
@@ -296,33 +312,47 @@ public class GameEngine extends JPanel {
      */
     private void drawHUD(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        int w = 110;
-        int h = 110;
-        int margin = 10;
+        int iconSize = 20;
+        int margin = 12;
+        int padding = 10;
+        int rowHeight = 28;
+        int rows = 4;
 
+        int w = 120;
+        int h = padding * 2 + rows * rowHeight;
         int x = getWidth() - w - margin;
         int y = margin;
 
-        g2.setColor(new Color(0, 0, 0, 140));
-        g2.fillRoundRect(x, y, w, h, 10, 10);
+        // background
+        g2.setColor(new Color(0, 0, 0, 160));
+        g2.fillRoundRect(x, y, w, h, 12, 12);
     
         g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 16));
+        g.setFont(pixelFont);
         
-        int textX = x + 10;
+        int textX = x + padding + iconSize + 8;
+        int iconX = x + padding;
         
         // lives
-        g.drawString("Lives: " + yogi.getLives(), textX, y + 25);
+        int row1Y = y + padding + iconSize;
+        g2.drawImage(heartIcon, iconX, row1Y - iconSize + 4, iconSize, iconSize, null);
+        g.drawString("x " + yogi.getLives(), textX, row1Y);
         
-        // total collected
-        g.drawString("Baskets: " + yogi.getBasketsCollected(), textX, y + 50);
-        
-        // level number
-        g.drawString("Level: " + (currentLevel.getLevelNumber() + 1), textX, y + 75);
-        
+        // baskets
+        int row2Y = row1Y + rowHeight;
+        g2.drawImage(basketIcon, iconX, row2Y - iconSize + 4, iconSize, iconSize, null);
+        g.drawString("x " + yogi.getBasketsCollected(), textX, row2Y);
+
         // time
-        g.drawString("Time: " + formatTime(elapsedTime), textX, y + 100);
+        int row3Y = row2Y + rowHeight;
+        g2.drawImage(clockIcon, iconX, row3Y - iconSize + 4, iconSize, iconSize, null);
+        g2.drawString(formatTime(elapsedTime), textX, row3Y);
+
+        // level
+        int row4Y = row3Y + rowHeight;
+        g2.drawString("LEVEL  " + (currentLevel.getLevelNumber() + 1), iconX, row4Y);
 
     }
     
