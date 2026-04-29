@@ -62,7 +62,7 @@ public class GameEngine extends JPanel {
 
         try {
             pixelFont = Font.createFont(Font.TRUETYPE_FONT,
-                    new File("data/fonts/PressStart2P-Regular.ttf")).deriveFont(10f);
+                    new File("data/fonts/PressStart2P-Regular.ttf")).deriveFont(16f);
             GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(pixelFont);
         } catch (Exception e) {
             pixelFont = new Font("Arial", Font.BOLD, 10);
@@ -333,35 +333,52 @@ public class GameEngine extends JPanel {
         g2.setColor(new Color(255, 255, 255, 60));
         g2.drawLine(0, y, getWidth(), y);
 
-        int iconSize = 24;
+        int iconSize = 32;
         int iconY = y + (barHeight - iconSize) / 2;
         int textY = y + barHeight / 2 + 6;
 
         g2.setFont(pixelFont);
+        g2.setColor(Color.WHITE);
+
+        // one third for placement
+        int third = getWidth() / 3;
+        FontMetrics fm = g2.getFontMetrics();
 
         // lives
-        int x1 = 20;
+        String livesText = "x " + yogi.getLives();
+        int livesTextW = fm.stringWidth(livesText);
+        int livesGroupW = iconSize + 6 + livesTextW;
+        int x1 = third / 4 - livesGroupW / 2;
         g2.drawImage(heartIcon, x1, iconY, iconSize, iconSize, null);
-        g2.setColor(Color.WHITE);
-        g2.drawString("x " + yogi.getLives(), x1 + iconSize + 6, textY);
+        drawShadowedString(g2, livesText, x1 + iconSize + 6, textY);
 
         // baskets
-        int x2 = 120;
+        String basketText = "x " + yogi.getBasketsCollected();
+        int basketTextW = fm.stringWidth(basketText);
+        int basketGroupW = iconSize + 6 + basketTextW;
+        int x2 = 3 * third / 4 - basketGroupW / 2;
         g2.drawImage(basketIcon, x2, iconY, iconSize, iconSize, null);
-        g2.setColor(Color.WHITE);
-        g2.drawString("x " + yogi.getBasketsCollected(), x2 + iconSize + 6, textY);
+        drawShadowedString(g2, basketText, x2 + iconSize + 6, textY);
 
         // level
         String levelText = "LEVEL " + (currentLevel.getLevelNumber() + 1);
         int levelTextWidth = g2.getFontMetrics().stringWidth(levelText);
-        g2.drawString(levelText, getWidth() / 2 - levelTextWidth / 2, textY);
+        drawShadowedString(g2, levelText, getWidth() / 2 - levelTextWidth / 2, textY);
 
         // time
         String timeText = formatTime(elapsedTime);
-        int timeTextWidth = g2.getFontMetrics().stringWidth(timeText);
-        int x4 = getWidth() - timeTextWidth - iconSize - 26;
+        int timeTextW = fm.stringWidth(timeText);
+        int timeGroupW = iconSize + 6 + timeTextW;
+        int x4 = third * 2 + third / 2 - timeGroupW / 2;
         g2.drawImage(clockIcon, x4, iconY, iconSize, iconSize, null);
-        g2.drawString(timeText, x4 + iconSize + 6, textY);
+        drawShadowedString(g2, timeText, x4 + iconSize + 6, textY);
+    }
+    
+    private void drawShadowedString(Graphics2D g2, String text, int x, int y) {
+        g2.setColor(Color.BLACK);
+        g2.drawString(text, x + 3, y + 3);
+        g2.setColor(Color.WHITE);
+        g2.drawString(text, x, y);
     }
     
     /**
