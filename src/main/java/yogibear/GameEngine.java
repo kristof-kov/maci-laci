@@ -1,11 +1,9 @@
 package yogibear;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -13,7 +11,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.Timer;
-import java.awt.Graphics2D;
 
 /**
  *
@@ -32,17 +29,24 @@ public class GameEngine extends JPanel {
     private boolean paused = false;
     private boolean gameOver = false;
     
-    // Timer
+    // timer
     private long gameStartTime;
     private long elapsedTime;
     
-    // Invincibility
+    // invincibility
     private boolean invincible = false;
     private long invincibilityStart;
     private final long INVINCIBILITY_DURATION = 2000; // 2 másodperc
     
-    // Score
+    // score
     private final ScoreManager scoreManager;
+
+    // assets
+    private Font pixelFont;
+    private final Image heartIcon;
+    private final Image basketIcon;
+    private final Image clockIcon;
+    private final Image hudBackground;
 
     public GameEngine() {
         super();
@@ -55,6 +59,20 @@ public class GameEngine extends JPanel {
         
         gameTimer = new Timer(1000 / FPS, new GameLoopListener());
         gameTimer.start();
+
+        try {
+            pixelFont = Font.createFont(Font.TRUETYPE_FONT,
+                    new File("data/fonts/PressStart2P-Regular.ttf")).deriveFont(16f);
+            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(pixelFont);
+        } catch (Exception e) {
+            pixelFont = new Font("Arial", Font.BOLD, 10);
+            System.err.println("Font not found, using Arial instead");
+        }
+
+        heartIcon = ImageCache.getImage("data/images/heart.png");
+        basketIcon = ImageCache.getImage("data/images/basket.png");
+        clockIcon = ImageCache.getImage("data/images/clock.png");
+        hudBackground = ImageCache.getImage("data/images/hud_background.png");
         
         SoundManager.load("pickup", "data/sounds/pickup.wav");
         SoundManager.load("caught", "data/sounds/caught.wav");
@@ -277,14 +295,21 @@ public class GameEngine extends JPanel {
         if (paused) {
             g.setColor(new Color(0, 0, 0, 150));
             g.fillRect(0, 0, getWidth(), getHeight());
+            g.setColor(Color.WHITE);
+            g.setFont(pixelFont.deriveFont(20f));
+            String text = "PAUSED";
+            int textWidth = g.getFontMetrics().stringWidth(text);
+            g.drawString(text, getWidth() / 2 - textWidth / 2, getHeight() / 2);
         }
         
         if (gameOver) {
             g.setColor(new Color(0, 0, 0, 150));
             g.fillRect(0, 0, getWidth(), getHeight());
             g.setColor(Color.WHITE);
-            g.setFont(new Font("Arial", Font.BOLD, 48));
-            g.drawString("GAME OVER", getWidth() / 2 - 160, getHeight() / 2);
+            g.setFont(pixelFont.deriveFont(20f));
+            String text = "GAME OVER";
+            int textWidth = g.getFontMetrics().stringWidth(text);
+            g.drawString(text, getWidth() / 2 - textWidth / 2, getHeight() / 2);
         }
     }
     
@@ -296,34 +321,64 @@ public class GameEngine extends JPanel {
      */
     private void drawHUD(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        int w = 110;
-        int h = 110;
-        int margin = 10;
+        int barHeight = 50;
+        int y = getHeight() - barHeight;
 
-        int x = getWidth() - w - margin;
-        int y = margin;
+        // background
+        g2.drawImage(hudBackground, 0, y, getWidth(), barHeight, null);
 
-        g2.setColor(new Color(0, 0, 0, 140));
-        g2.fillRoundRect(x, y, w, h, 10, 10);
-    
-        g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 16));
-        
-        int textX = x + 10;
-        
+        // line
+        g2.setColor(new Color(255, 255, 255, 60));
+        g2.drawLine(0, y, getWidth(), y);
+
+        int iconSize = 32;
+        int iconY = y + (barHeight - iconSize) / 2;
+        int textY = y + barHeight / 2 + 8;
+
+        g2.setFont(pixelFont);
+        g2.setColor(Color.WHITE);
+
+        // one third for placement
+        int third = getWidth() / 3;
+        FontMetrics fm = g2.getFontMetrics();
+
         // lives
-        g.drawString("Lives: " + yogi.getLives(), textX, y + 25);
-        
-        // total collected
-        g.drawString("Baskets: " + yogi.getBasketsCollected(), textX, y + 50);
-        
-        // level number
-        g.drawString("Level: " + (currentLevel.getLevelNumber() + 1), textX, y + 75);
-        
-        // time
-        g.drawString("Time: " + formatTime(elapsedTime), textX, y + 100);
+        String livesText = "x " + yogi.getLives();
+        int livesTextW = fm.stringWidth(livesText);
+        int livesGroupW = iconSize + 6 + livesTextW;
+        int x1 = third / 4 - livesGroupW / 2;
+        g2.drawImage(heartIcon, x1, iconY, iconSize, iconSize, null);
+        drawShadowedString(g2, livesText, x1 + iconSize + 6, textY);
 
+        // baskets
+        String basketText = "x " + yogi.getBasketsCollected();
+        int basketTextW = fm.stringWidth(basketText);
+        int basketGroupW = iconSize + 6 + basketTextW;
+        int x2 = 3 * third / 4 - basketGroupW / 2;
+        g2.drawImage(basketIcon, x2, iconY, iconSize, iconSize, null);
+        drawShadowedString(g2, basketText, x2 + iconSize + 6, textY);
+
+        // level
+        String levelText = "LEVEL " + (currentLevel.getLevelNumber() + 1);
+        int levelTextWidth = g2.getFontMetrics().stringWidth(levelText);
+        drawShadowedString(g2, levelText, getWidth() / 2 - levelTextWidth / 2, textY);
+
+        // time
+        String timeText = formatTime(elapsedTime);
+        int timeTextW = fm.stringWidth(timeText);
+        int timeGroupW = iconSize + 6 + timeTextW;
+        int x4 = third * 2 + third / 2 - timeGroupW / 2;
+        g2.drawImage(clockIcon, x4, iconY, iconSize, iconSize, null);
+        drawShadowedString(g2, timeText, x4 + iconSize + 6, textY);
+    }
+    
+    private void drawShadowedString(Graphics2D g2, String text, int x, int y) {
+        g2.setColor(Color.BLACK);
+        g2.drawString(text, x + 3, y + 3);
+        g2.setColor(Color.WHITE);
+        g2.drawString(text, x, y);
     }
     
     /**
