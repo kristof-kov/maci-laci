@@ -284,7 +284,7 @@ public class GameEngine extends JPanel {
             g.fillRect(0, 0, getWidth(), getHeight());
             g.setColor(Color.WHITE);
             g.setFont(new Font("Arial", Font.BOLD, 48));
-            g.drawString("GAME OVER", getWidth() / 2 - 80, getHeight() / 2);
+            g.drawString("GAME OVER", getWidth() / 2 - 160, getHeight() / 2);
         }
     }
     
