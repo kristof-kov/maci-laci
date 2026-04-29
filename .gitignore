@@ -9,6 +9,7 @@ dependency-reduced-pom.xml
 
 # NetBeans
 nbproject/
+build/
 build.xml
 
 # Database (Apache Derby)
